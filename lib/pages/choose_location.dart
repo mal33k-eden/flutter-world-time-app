@@ -20,6 +20,17 @@ class _ChooseLocationState extends State<ChooseLocation> {
     WorldTime(url: 'Asia/Jakarta', location: 'Jakarta', flag: 'indonesia.png'),
   ];
 
+  void updateTime(index) async {
+    WorldTime instance = locations[index];
+    await instance.getTime();
+    Navigator.pop(context, {
+      'time': instance.time,
+      'location': instance.location,
+      'flag': instance.flag,
+      'isDayTime': instance.isDayTime
+    });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -39,14 +50,20 @@ class _ChooseLocationState extends State<ChooseLocation> {
       body: ListView.builder(
           itemCount: locations.length,
           itemBuilder: (context, index) {
-            return Card(
-                child: ListTile(
-              onTap: () {},
-              title: Text(locations[index].location),
-              leading: CircleAvatar(
-                backgroundImage: AssetImage('assets/${locations[index].flag}'),
-              ),
-            ));
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 1, horizontal: 4),
+              child: Card(
+                  child: ListTile(
+                onTap: () {
+                  updateTime(index);
+                },
+                title: Text(locations[index].location),
+                leading: CircleAvatar(
+                  backgroundImage:
+                      AssetImage('assets/${locations[index].flag}'),
+                ),
+              )),
+            );
           }),
     );
   }
